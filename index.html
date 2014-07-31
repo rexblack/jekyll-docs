@@ -1,0 +1,35 @@
+---
+layout: full
+---
+
+{% include header.html %}
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>{{ site.title }}</h1>
+    <p>{{ site.description }}</p>
+    {% for page in site.pages %}
+      {% if page.title and page.title != 'About' %}<a class="btn btn-primary btn-lg" href="{{ page.url | prepend: site.baseurl }}">Get started &raquo;</a>{% break %}{% endif %}
+    {% endfor %}
+  </div>
+</div>
+    
+<div class="container">
+  <div class="row">
+    <div class="col-md-9">
+      {% for post in site.posts %}
+      <div class="media">
+        <div class="media-body">
+          <h4 class="media-heading"><a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a> <small class="post-date">{{ post.date | date: "%b %-d, %Y" }}</small></h4>
+          {{ post.excerpt }} <span class="pull-right"><a><i class="glyphicon glyphicon-circle-arrow-right"> </i></a> <a href="{{post.url | prepend: site.baseurl }}">Read more</a></span>
+        </div>
+      </div>
+      {% endfor %}
+      <p class="rss-subscribe"><a><i class="glyphicon glyphicon-circle-arrow-right"> </i></a> <a href="{{ "/feed.xml" | prepend: site.baseurl }}">RSS</a></p>
+
+    </div>
+  </div>
+  
+</div>
+
+{% include footer.html %}

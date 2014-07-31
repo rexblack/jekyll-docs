@@ -1,0 +1,40 @@
+.highlight-example .hll {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  overflow: hidden;
+}
+
+.highlight-example + .highlight pre {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-width: 1px;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: -1px;
+}
+
+.highlight-example {
+  position: relative;
+}
+
+.highlight-example .hll {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  overflow: hidden;
+}
+
+/*
+.highlight-example .hll {
+  padding: 45px 15px 15px;
+}
+.highlight-example:after {
+  color: #959595;
+  content: "Example";
+  font-size: 12px;
+  font-weight: 700;
+  left: 15px;
+  letter-spacing: 1px;
+  position: absolute;
+  text-transform: uppercase;
+  top: 15px;
+}*/

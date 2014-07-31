@@ -1,0 +1,33 @@
+<footer class="footer">
+  <div class="container">
+    jekyll-docs <!-- | <a href="http://benignware.com">benignware.com</a> -->
+  </div>
+</footer>
+<script>
+  $(function() {
+    $('.sidebar').affix({
+      offset: {
+        top: function() {
+          var $b = $("body");
+          return this.top =  $(".navbar").height();
+        }, 
+        bottom: function() {
+          return this.bottom = $(".footer").outerHeight(!0);
+        }
+      }
+    }).find('.sidenav').pagenav({
+      content: '.post-content', 
+      listClass: 'nav'
+    });
+    $('body').scrollspy({
+      target: '.sidebar', 
+      offset: 10
+    });
+    $('.sidebar').on('click', function(e) {
+      // if (e.target.href) {
+        // $(window).scrollTo($($(e.target).attr('href'))[0]);
+        // e.preventDefault();
+      // }
+    });
+  });
+</script>

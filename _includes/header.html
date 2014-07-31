@@ -1,0 +1,28 @@
+{% assign current = page %}
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ site.baseurl }}/">{{ site.title }}</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        {% for page in site.pages %}
+          {% if page.title and page.title != 'About' %}<li{% if current.url contains page.url %} class="active"{% endif %}><a class="page-link" href="{{ page.url | prepend: site.baseurl }}">{{page.title}}</a></li>{% endif %}
+        {% endfor %}
+      </ul>
+      {% for page in site.pages %}
+        {% if page.title == 'About' %}
+          <ul class="nav navbar-nav navbar-right">
+            <li{% if current.url contains page.url %} class="active"{% endif %}><a class="page-link" href="{{ page.url | prepend: site.baseurl }}">{{page.title}}</a></li>
+          </ul>
+        {% endif %}
+      {% endfor %}
+    </div><!--/.nav-collapse -->
+  </div>
+</div>

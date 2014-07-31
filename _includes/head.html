@@ -1,0 +1,51 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% if page.title %}{{ site.title }} | {{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="{{ site.description }}">
+    <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" href="{{ "/vendor/bootstrap/css/bootstrap.min.css" | prepend: site.baseurl }}">
+    
+    <!-- Vendor Scripts -->
+    <script src="{{ "/vendor/jquery/jquery.min.js" | prepend: site.baseurl }}"></script>
+    <script src="{{ "/vendor/bootstrap/js/bootstrap.min.js" | prepend: site.baseurl }}"></script>
+   
+    
+    <script src="{{ "/vendor/jquery-scroll-to/jquery.scroll-to.js" | prepend: site.baseurl }}"></script>
+    <script src="{{ "/vendor/jquery-pygxample/jquery.pygxample.js" | prepend: site.baseurl }}"></script>
+    <script src="{{ "/vendor/jquery-pagenav/jquery.pagenav.js" | prepend: site.baseurl }}"></script>
+    
+    <!-- Custom CSS -->
+    
+    <link rel="stylesheet" href="{{ "/css/pygments.css" | prepend: site.baseurl }}">
+    
+    <link rel="stylesheet" href="{{ "/css/pygxample.css" | prepend: site.baseurl }}">
+    
+    <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
+    
+    <script src="{{ "/vendor/holderjs/holder.js" | prepend: site.baseurl }}"></script>
+    
+    <script>
+      $('.highlight').pygxample({
+        manifest: '{{ "/manifest.json" | prepend: site.baseurl }}', 
+        rendered: function() {
+          Holder.run();
+        }
+      });
+    </script>
+    
+    
+     
+    <script>
+      console.log("END HEAD");
+      $(function() {
+        window.setTimeout(function() {
+          Holder.run();
+          console.log("holder run");
+        }, 100);
+      });
+    </script>
+</head>
