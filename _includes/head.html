@@ -30,7 +30,7 @@
     
     <script>
       $('.highlight').pygxample({
-        manifest: '{{ "/manifest.json" | prepend: site.baseurl }}', 
+        manifest: '{{ "examples/manifest.json" | prepend: site.baseurl }}', 
         rendered: function() {
           Holder.run();
         }

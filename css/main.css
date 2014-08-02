@@ -13,10 +13,6 @@ a:focus {
   outline: none;
 }
 
-.container {
-  /*background: yellow;*/
-}
-
 footer {
   margin-top: 80px;
   border-top: 1px solid #e7e7e7;
@@ -26,7 +22,6 @@ footer {
   width: 100%;
 }
 
-
 .navbar {
   margin-bottom: 0;
 }
@@ -35,138 +30,12 @@ body > .container {
   margin-top: 20px;
 }
 
-
-
-
-/*
-.sidebar .nav > li > a {
-  font-size: 12px;
-  font-weight: 400;
-  padding-bottom: 1px;
-  padding-left: 30px;
-  padding-top: 1px;
-}
-
-.sidebar .nav .nav {
-  padding-left: 5px;
-}
-
-.sidebar .nav > li.active > a {
-  color: #000;
-}*/
-
 .affix {
   top: 20px;
 }
 
 .affix-bottom {
-  /*position: absolute;
-  top: auto;
-  bottom: 130px;*/
   position: relative;
-}
-
-
-.highlight .hll { 
-  padding: 20px;
-}
-
-.btn-default {
-  background: green;
-  color: white;
-  font-weight: bold;
-}
-
-
-/*.highlight-example:after {
-  color: #959595;
-  content: "Example";
-  font-size: 12px;
-  font-weight: 700;
-  left: 15px;
-  letter-spacing: 1px;
-  position: absolute;
-  text-transform: uppercase;
-  top: 15px;
-}*/
-
-/*.sidebar .nav > li > a {
-  color: #999;
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 4px 20px;
-}
-
-.sidebar .nav .nav > li > a {
-  font-size: 12px;
-  font-weight: 400;
-  padding-bottom: 1px;
-  padding-left: 30px;
-  padding-top: 1px;
-}
-
-.sidebar .nav .nav > .active > a, 
-.sidebar .nav .nav > .active:hover > a, 
-.sidebar .nav .nav > .active:focus > a {
-  font-weight: 500;
-  padding-left: 28px;
-}
-
-.sidebar .nav .nav > li > a:hover, 
-.sidebar .nav .nav > li > a:focus {
-  padding-left: 29px;
-}
-
-.sidebar .nav .nav {
-  display: none;
-}
-
-.sidebar .nav > .active > ul {
-  display: block;
-}*/
-
-/* #428bca, #2a6496; */
-
-
-/*.sidebar .nav > li > a:hover, 
-.sidebar .nav > li > a:focus {
-  background-color: transparent;
-  border-left: 1px solid #2a6496;
-  color: #2a6496;
-  padding-left: 19px;
-  text-decoration: none;
-}
-
-.sidebar .nav > li > a:focus {
-  border-color: #428bca;
-  color: #428bca;
-}
-
-.sidebar .nav > .active > a, 
-.sidebar .nav > .active:hover > a, 
-.sidebar .nav > .active:focus > a {
-  background-color: transparent;
-  border-color: #428bca;
-  color: #428bca;
-  font-weight: 700;
-  padding-left: 18px;
-}
-
-
-.sidebar .nav > .active:hover > a:hover {
-  border-color: #2a6496;
-  color: #2a6496;
-}
-
-.sidebar .nav > li > a:hover, 
-.sidebar .nav > li > a:focus {
-  background-color: transparent;
-}*/
-
-
-.sidebar.affix {
-  /*position: static;*/
 }
 
 @media (min-width: 768px) {
