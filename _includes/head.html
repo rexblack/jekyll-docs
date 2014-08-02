@@ -30,22 +30,12 @@
     
     <script>
       $('.highlight').pygxample({
-        manifest: '{{ "examples/manifest.json" | prepend: site.baseurl }}', 
+        baseUrl: '{{ "/" | prepend: site.baseurl }}', 
+        manifest: 'examples/manifest.json', 
         rendered: function() {
           Holder.run();
         }
       });
     </script>
-    
-    
-     
-    <script>
-      console.log("END HEAD");
-      $(function() {
-        window.setTimeout(function() {
-          Holder.run();
-          console.log("holder run");
-        }, 100);
-      });
-    </script>
+
 </head>

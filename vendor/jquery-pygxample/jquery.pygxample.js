@@ -7,7 +7,7 @@
     wrap: '<div class="highlight highlight-example"><div class="hll"></div></div>', 
     executes: ['html', 'js', 'css'], 
     errors: 'none', 
-    iframe: true, 
+    iframe: false, 
     updateInterval: 500
   };
   
@@ -34,9 +34,8 @@
     return domain + "/" + pathname + url;
   }
   
-  
   function dirName(path) {
-    return path.substring(0, path.lastIndexOf("/") + 1);
+    return path ? path.substring(0, path.lastIndexOf("/") + 1) : "";
   }
   
   function fileName(url) {
@@ -147,7 +146,6 @@
     element.children().each(function() {
       result = result.concat(getWrapperStyles(this, child));
     });
-    console.log("get wrapper styles: ", result);
     return result;
   }
   
@@ -170,14 +168,12 @@
     }
     $(wrapperStyles).each(function(index, obj) {
       if (element[0] == this.element) {
-        console.log("restore wrapper styles: ", element[0], this.className);
         $(this.element)
           .attr('class', obj.className)
           .attr('style', obj.style);
       }
     });
     element.children().each(function() {
-      console.log("restore for children", this, child);
       restoreWrapperStyles(this, child, wrapperStyles);
     });
   }
@@ -192,6 +188,7 @@
     
     var wrapperStyles = [];
     var updateIntervalId = null;
+    var contentSelector = null;
     
     this.getOption = function(name) {
       return options[name];
@@ -207,7 +204,7 @@
     }
     
     function resizeContent() {
-      var resizeTarget = contentElement.prop('contentDocument') ? $(contentElement.prop('contentDocument')).find('body') : contentElement;
+      var resizeTarget = contentElement.prop('contentDocument') ? $(contentElement.prop('contentDocument')).find(contentSelector || "body") : contentElement;
       var contentHeight = resizeTarget.height();
       if (validatedContentHeight != contentHeight) {
         validatedContentHeight = contentHeight;
@@ -229,8 +226,6 @@
     
     function renderIFrame() {
       
-      console.info("RENDER FRAME");
-      
       contentElement = $('<iframe frameborder="0"> </iframe>').css({
         width: '100%', 
         height: 0, 
@@ -241,42 +236,77 @@
       contentElement.insertBefore(element);
       contentElement.wrap(wrap);
       
-      // var parent = $(contentElement).parent();
-      // var padding = parent.css('padding-top') + " " + parent.css('padding-right') + " " + parent.css('padding-bottom') + " " + parent.css('padding-left');
-//       
       wrapperElement = $(element.previousSibling);
       wrapperStyles = getWrapperStyles(wrapperElement, contentElement);
       
-      console.info("get wrapperStyles: ", wrapperStyles);
+      // asset paths
+      var pageAssets = $("link[rel='stylesheet'], script[src]", $('head')).map(function(obj) {
+        return $(this).attr('href') || $(this).attr('src');
+      }).toArray();
+      var assets = $(options.assets).map(function(index, path) {
+        return concatUrl(dirName(concatUrl(options.baseUrl, options.manifest)), path);
+      }).toArray();
+      var assets = pageAssets.concat(assets);
       
-      // var borderRadius = parent.css('border-top-left-radius') + " " + parent.css('border-top-right-radius') + " " + parent.css('border-bottom-right-radius') + " " + parent.css('border-bottom-left-radius');
-      // contentElement.css('border-radius', borderRadius);
-
-      var headHtml = "";
-      $(options.assets).each(function(index, path) {
-        var url = concatUrl(options.baseUrl, path);
-        console.info("ASSET: ", url);
-        var type = url.substring(url.lastIndexOf(".") + 1);
-        if (type == "js") {
-          headHtml+= '<script src="' + url + '"></script>'; 
-        } else if (type == "css") {
-          headHtml+= '<link rel="stylesheet" href="' + url + '">';
-        }
-      });
-      
-      var bodyHtml = "";
+      // content html
+      var contentHTML = "";
       var groupInstances = getGroupInstances(instance);
       $(groupInstances).each(function(index, obj) {
         var codeHtml = getCodeHtml(obj.getOption('code'), obj.getOption('lang'));
         var groupHtml = obj === instance ? codeHtml : '<div style="display: none">' + codeHtml + '</div>';
-        console.log("groupHtml: ", html, groupHtml);
-        bodyHtml+= groupHtml;
+        contentHTML+= groupHtml;
+      });
+      var outer = $("<div></div>");
+      var inner = $("<div></div>");
+      outer.append(inner);
+      inner.wrap(options.wrap);
+      
+      var wrapperElements = inner.parents().toArray();
+      wrapperElements.pop();
+      wrapperElements.reverse();
+      var selector = "";
+      var wrapperSelectors = $(wrapperElements).map(function(index, object) {
+        return selector = (selector ? selector + " > " : "") + (index == 0 ? "body" : "") + "." + $(object).prop('className').split(/\s+/).join(".");
+      }).toArray();
+      var elem = outer.children().first();
+      var parent = inner[0].parentNode;
+      parent.innerHTML = contentHTML;
+      var className = wrapperElements[0] ? $(wrapperElements[0]).prop('className') : "";
+      contentHTML = elem.html();
+      contentSelector = wrapperSelectors[wrapperSelectors.length - 1];
+      // build html
+      var html = "<!DOCTYPE html>\n";
+      html+= "<html>";
+      html+= "<head>";
+      
+      $(assets).each(function(index, url) {
+        var type = url.substring(url.lastIndexOf(".") + 1);
+        if (type == "js") {
+          html+= '<script src="' + url + '"></script>'; 
+        } else if (type == "css") {
+          html+= '<link rel="stylesheet" href="' + url + '">';
+        }
       });
       
-      var html = "<!DOCTYPE html>\n";
-      html+= "<html><head>" + headHtml + "</head><body>" + bodyHtml + "</body></html>"; 
+      // override styles
+      html+= "<style>";
+      html+= 'body, html { border: none; margin: 0; padding: 0; border-radius: 0; }';
+      for (var i = 0, selector; selector = wrapperSelectors[i]; i++) {
+        var props = "margin: 0; border: 0; border-radius: 0;";
+        if (wrapperSelectors[i + 1]) {
+          props+= "padding: 0;"; 
+        }
+        
+        html+= selector + ' { ' + props + ' }';
+      }
+      html+= "</style>";
+      html+= "</head>";
       
-      console.log("html:", html);
+      // body
+      html+= '<body class="' + className + '">';
+      html+= contentHTML;
+      html+= "</body>";
+      html+= "</html>";
       
       $(contentElement.prop('contentWindow')).on('load resize', resizeContent);
       
@@ -285,21 +315,16 @@
         // window.clearInterval(updateIntervalId);
         // updateIntervalId = window.setInterval(resizeContent, options.updateInterval);
       // }
-//       
 
-      console.info("contentElement: ", contentElement.prop('contentWindow'));
       var idoc = contentElement.prop('contentDocument');
       
       idoc.open();
       idoc.write(html);
       idoc.close();
-//       
       resizeContent();
     }
     
     function render() {
-      
-      console.log("RENDER ", options.iframe);
       
       if (!options.code) {
         return;
@@ -354,7 +379,6 @@
   }
   
   function loadAssets(assets, callback) {
-    console.info("load assets");
     var queue = assets.slice(); 
     var head = $('head');
     
@@ -401,34 +425,39 @@
   }
   
   function watch(selector, callback) {
-    console.info("init watch: ", selector, callback);
+    // console.info("init watch: ", selector, callback);
+  }
+  
+  function getAssetPath(options) {
+    var manifestFile = concatUrl(options.baseUrl, options.manifest);
+    return dirName(manifestFile);
   }
   
   $.fn[pluginName] = function(options) {
     
     var j = this;
     
-    console.log("init plugin: ", document.readyState, j.selector);
+    // console.log("init plugin: ", options);
     
     var newInstances = [];
     var group = options.group || {};
     
-    var manifestFile = options.manifest;
-    loadFile(manifestFile, function(manifest) {
+    options.baseUrl = options.baseUrl || dirName($('base').attr('href')) || window.location.protocol + "://" + window.location.host + window.location.pathname;
+    options.baseUrl = options.baseUrl || "./"; 
+    options.manifest = options.manifest || "";
     
-      console.info("manifest loaded", defaults.iframe, manifest.iframe, options.iframe);
+    var manifestFile = concatUrl(options.baseUrl, options.manifest);
+    var assetPath = dirName(manifestFile);
+    
+    loadFile(manifestFile, function(manifest) {
     
       if (manifest) {
         options = $.extend({}, defaults, manifest, options);
       }
-
-      options.baseUrl = options.baseUrl || options.manifest ? dirName(options.manifest) : $('base').attr('href') ? dirName($('base').attr('href')) : window.location.protocol + "://" + window.location.host + window.location.pathname;
-      options.baseUrl = options.baseUrl || "./"; 
       
       options.group = group;
       
-      loadAssets(options.iframe ? [] : options.assets.map(function(path, index) {return concatUrl(options.baseUrl, path);}), function() {
-        
+      loadAssets(options.iframe ? [] : options.assets.map(function(path, index) {return concatUrl(assetPath, path);}), function() {
         
         // var watch = (function() {
           // watchIntervalId = setInterval(function() {
@@ -440,8 +469,6 @@
         // })();
         
         $(function() {
-          
-          console.info("DOC READY: ");
           
           j = $(j.selector);
           
@@ -473,9 +500,5 @@
     return this;
     
   };
-  
-  $(function() {
-    console.info("-----> doc ready");
-  });
   
 })(jQuery, window);
